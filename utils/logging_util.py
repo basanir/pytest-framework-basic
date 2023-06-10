@@ -27,7 +27,7 @@ class Logger:
         file_handler.setLevel(level)
 
         # create a logging format
-        formatter = logging.Formatter('[%(asctime)s] [%(name)-25s::%(funcName)-20s] [%(levelname)-8s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+        formatter = logging.Formatter('[%(asctime)s] [%(name)-20s::%(funcName)-25s] [%(levelname)-8s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
         console_handler.setFormatter(formatter)
         file_handler.setFormatter(formatter)
 
