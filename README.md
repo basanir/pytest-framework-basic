@@ -16,3 +16,8 @@ Is called at function scope with autouse set to Ture.
 Default log level is set to INFO, it can be chnaged at a test script function level by setting a marker log_level
 ``` @pytest.mark.log_level("DEBUG") ```
 
+### utils
+#### logging_util.py
+This module enables to create a logger object in conftest.py
+It prints log statements to console as well as file(testdir+test_file_name+timestamp.log)
+
