@@ -17,6 +17,15 @@ def logger(request):
     logger_obj = Logger(log_name, level=level)  # use logging_level here
     return logger_obj.get_logger()
 
+# Add hook to log test outcome
+@pytest.hookimpl(tryfirst=True)
+def pytest_runtest_makereport(item, call):
+    # Only log when the actual test is run, not during setup/teardown
+    if call.when == 'call':
+        logger = item._request.getfixturevalue("logger")
+        outcome = 'PASSED' if call.excinfo is None else 'FAILED'
+        logger.info(f"Test outcome: {outcome}")
+
 
 
 
