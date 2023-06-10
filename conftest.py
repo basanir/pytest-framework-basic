@@ -1,16 +1,23 @@
 import pytest
+import logging
 from utils.logging_util import Logger
 
-@pytest.fixture(scope="session", autouse=True)
+
+# Modify logger fixture to use logging_level
+@pytest.fixture(scope="function", autouse=True)
 def logger(request):
     log_name = request.node.nodeid.split("::")[0].replace("/", "_")
-    logger = Logger(log_name).get_logger()
-    return logger
+    marker = request.node.get_closest_marker("log_level")
+    if marker is None:
+        # Default log level
+        level = logging.INFO
+    else:
+        level_str = marker.args[0]
+        level = getattr(logging, level_str.upper(), logging.INFO)
+    logger_obj = Logger(log_name, level=level)  # use logging_level here
+    return logger_obj.get_logger()
 
-@pytest.fixture(scope="function", autouse=True)
-def log_test_start_finish(request, logger):
-    test_name = request.node.nodeid
-    logger.info(f'\nStarting test: {test_name}')
-    yield  # This is where the test runs.
-    logger.info(f'\nFinishing test: {test_name}')
+
+
+
 
