@@ -1,37 +1,38 @@
 import pytest
 
-@pytest.mark.log_level("DEBUG")
-def test_example_first(logger):
-    logger.info('This is an info log message')
-    # Rest of your test here...
-    logger.info('This is another info log message')
-    logger.debug('This is a debug log message')
 
-def test_example(logger):
-    logger.info('This is an info log message')
-    # Rest of your test here...
-    logger.info('This is another info log message')
+def test_httpbin_get(logger, api_helper):
+    # Define test data
+    input_params = {
+        "foo": "bar",
+    }
+    expected_params = {
+        "foo": "bar1",
+    }
 
-    logger.error('This is an error log message')
+    # Make request
+    response = api_helper.get("/get", params=input_params)
 
-    logger.warning('This is a warning log message')
+    # Log response
+    logger.info(f"Response status code: {response.status_code}")
 
-    logger.critical('This is a critical log message')
+    # Verify response
+    assert response.status_code == 200
 
-    logger.debug('This is a debug log message')
+    # Log response body
+    logger.debug(f"Response body: {response.text}")
 
-@pytest.mark.log_level("DEBUG")
-def test_example2(logger):
-    logger.debug('This is a debug log message')
-    logger.info('This is an info log message')
+    # Verify response body
+    response_body = response.json()
+    # assert and if it fails print both actual and expected using logger object
+    assert response_body["args"] == expected_params, logger.error(f"Expected params: {expected_params}, Actual params: {response_body['args']}")
 
-def test_example3(logger):
-    logger.info('This is an info log message')
-    # Rest of your test here...
-    logger.info('This is another info log message')
-    logger.error('This is an error log message')
-    logger.warning('This is a warning log message')
-    logger.critical('This is a critical log message')
-    logger.debug('This is a debug log message')
+
+
+
+
+
+    
+    
 
 
