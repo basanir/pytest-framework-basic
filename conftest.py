@@ -1,6 +1,8 @@
 import pytest
 import logging
 from utils.logging_util import Logger
+from utils.api_helper import APIHelper
+from utils.config_parser import ConfigParser
 
 
 # Modify logger fixture to use logging_level
@@ -25,6 +27,37 @@ def pytest_runtest_makereport(item, call):
         logger = item._request.getfixturevalue("logger")
         outcome = 'PASSED' if call.excinfo is None else 'FAILED'
         logger.info(f"Test outcome: {outcome}")
+
+# create a fixture for APIHelper class
+@pytest.fixture(scope="session")
+def api_helper(config):
+    """
+    Create an APIHelper instance for the API under test.
+
+    Args:
+
+
+    Returns:
+        An APIHelper instance.
+    """
+    base_url = config.get("base_url")
+    api = APIHelper(base_url)
+    return api
+
+# create a fixture for ConfigParser class
+@pytest.fixture(scope="session")
+def config(request):
+    """
+    Create a ConfigParser instance for the config file.
+    """
+    env = request.config.getoption("--env")
+    config_file = "config.ini"
+    config = ConfigParser(config_file, env=env)
+    return config
+
+def pytest_addoption(parser):
+    parser.addoption("--env", action="store", default="dev", help="Environment to run tests against")
+
 
 
 
