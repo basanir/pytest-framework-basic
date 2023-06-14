@@ -24,6 +24,21 @@ The configuration manager reads an .ini configuration file to ascertain the base
 
 #### Enhanced API Test Reporting
 The framework facilitates advanced reporting for API tests, including logging the response when a test fails. This is achieved through a customized pytest hook within the conftest.py file.
+```python
+def test_api_get(api_helper, logger):
+    response = api_helper.get("/api/endpoint")
+    logger.info(response)
+    assert response.status_code == 200
+```
+#### Database connection and query
+The framework facilitates database connection and query. This is achieved through a customized pytest hook within the conftest.py file.
+```python
+def test_db_query(db_util, logger):
+    query = "select * from table"
+    result = db_util.query(query)
+    logger.info(result)
+    assert len(result) > 0, logger.error("No records found")
+```
 
 #### Test Script
 The test_feature.py test script provides a practical example of how these tools can be used to write effective API tests. This script includes both positive and negative tests, and demonstrates how to use the custom logger.

@@ -3,6 +3,7 @@ import logging
 from utils.logging_util import Logger
 from utils.api_helper import APIHelper
 from utils.config_parser import ConfigParser
+from utils.database_util import DBUtil
 
 
 # Modify logger fixture to use logging_level
@@ -58,7 +59,25 @@ def config(request):
 def pytest_addoption(parser):
     parser.addoption("--env", action="store", default="dev", help="Environment to run tests against")
 
+@pytest.fixture()
+def db_util(config, logger):
+    """
+    Create a DBUtil instance for the database under test.
 
+    Args:
+        config (ConfigParser): A ConfigParser instance.
+        logger (Logger): A Logger instance.
+
+    Returns:
+        A DBUtil instance.
+    """
+    host = config.get("host")
+    user = config.get("user")
+    password = config.get("password")
+    database = config.get("database")
+    db = DBUtil(host, user, password, database, logger)
+    yield db
+    db.disconnect()
 
 
 
